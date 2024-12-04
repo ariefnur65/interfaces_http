@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
@@ -13,9 +14,13 @@ func main() {
 		os.Exit(1)
 	}
 	//fmt.Println(resp)
-	bs := make([]byte, 99999) //create byteslice that has 99999 empty bytes,
+	//bs := make([]byte, 99999) //create byteslice that has 99999 empty bytes,
 	// it needs to be large because Reader interface cannot modify slices size,
 	// when it is full, it will stop reading when the slice is full instead
-	resp.Body.Read(bs)
-	fmt.Println("Hasil Read:", string(bs))
+	//resp.Body.Read(bs)
+	//fmt.Println("Hasil Read:", string(bs))
+
+	fmt.Println("---------using copy io---------")
+	io.Copy(os.Stdout, resp.Body)
+
 }
