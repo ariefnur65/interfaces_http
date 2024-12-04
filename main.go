@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+type logWriter struct{}
+
 func main() {
 	resp, err := http.Get("http://google.com")
 	if err != nil {
@@ -19,8 +21,16 @@ func main() {
 	// when it is full, it will stop reading when the slice is full instead
 	//resp.Body.Read(bs)
 	//fmt.Println("Hasil Read:", string(bs))
+	lw := logWriter{}
 
 	fmt.Println("---------using copy io---------")
-	io.Copy(os.Stdout, resp.Body)
+	io.Copy(lw, resp.Body)
 
+}
+
+func (logWriter) Write(bs []byte) (int, error) {
+	fmt.Println(string(bs))
+	totalByte := len(bs)
+	fmt.Println("Just wrote:", totalByte)
+	return totalByte, nil
 }
